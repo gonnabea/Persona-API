@@ -10,6 +10,7 @@
 ### Databases & ODM
 - [ ] MongoDB
 - [ ] Mongoose
+- [ ] Typegoose
 
 ### Framworks
 - [x] Express.js
