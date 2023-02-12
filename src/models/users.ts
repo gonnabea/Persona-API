@@ -1,3 +1,41 @@
+/**
+*  @swagger
+*  tags:
+*    name: Books
+*    description: API to manage your books.
+*/
+/**
+*  @swagger
+*  paths:
+*   /books:
+*     get:
+*       summary: Lists all the books
+*       tags: [Books]
+*       responses:
+*         "200":
+*           description: The list of books.
+*           content:
+*             application/json:
+*               schema:
+*                 $ref: '#/components/schemas/Book'
+*     post:
+*       summary: Creates a new book
+*       tags: [Books]
+*       requestBody:
+*         required: true
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/Book'
+*       responses:
+*         "200":
+*           description: The created book.
+*           content:
+*             application/json:
+*               schema:
+*                 $ref: '#/components/schemas/Book'
+*/
+
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
