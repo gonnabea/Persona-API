@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
-import { checkEmailValid } from "../utils";
-import { CreateAccount } from "../@types/auth";
+import { checkEmailValid, checkPassword } from "../utils";
+import { CreateAccount, Login } from "../@types/auth";
 import User from "../models/users";
+import jwt from "jsonwebtoken";
+
 
 export const createAccount = async (req: Request, res: Response): Promise<CreateAccount> => {
     try {
@@ -25,20 +27,20 @@ export const createAccount = async (req: Request, res: Response): Promise<Create
                 data: newUser
             }
         }
-        else if (!checkPW) {
-            // 비밀번호가 다를 경우
-            return {
-                ok: false,
-                error: "Password not matching",
-                status: 401
-            }
-        }
         else if (!emailValid) {
             // 유효하지 않은 이메일 형식일 경우
             return {
                 ok: false,
-                error: "Email is not valid",
-                status: 401
+                error: "Email is not valid.",
+                status: 400
+            }
+        }
+        else if (!checkPW) {
+            // 비밀번호가 다를 경우
+            return {
+                ok: false,
+                error: "Password not matching.",
+                status: 400
             }
         }
         else {
@@ -52,8 +54,56 @@ export const createAccount = async (req: Request, res: Response): Promise<Create
 
     }
     catch(err) {
-        console.log("createAccount: ", err);
+        console.log("createAccount:: ", err);
     }
 
     
+}
+
+export const login = async (req: Request, res: Response): Promise<Login> => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({
+            email
+        })
+
+        if (!user) {
+            return {
+                ok: false,
+                status: 400,
+                error: "",
+            }
+        }
+        
+        const pwValid = checkPassword(password);
+
+        if (!pwValid) {
+            return {
+                ok: false,
+                status: 400,
+                error: "1. password should include 1 character and number \n 2. password should at least 8 characters"
+            }
+        }
+
+        const token = jwt.sign({
+            data: {
+                email,
+            }
+        }, process.env.SECRET_KEY, { expiresIn: '2h', algorithm: 'HS256' }); // 2시간 뒤 토큰 만료
+
+        console.log(token);
+
+        return {
+            ok: true,
+            status: 200,
+            msg: "login success.",
+            token
+        }
+            
+    }
+    catch (err) {
+        console.log("login:: ", err);
+
+    }
 }
