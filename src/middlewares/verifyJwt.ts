@@ -8,21 +8,21 @@ const verifyJwt = (token: string) => {
             return {
                 ok: false,
                 error: err,
-                status: 400
-            }
+                status: 400,
+            };
         }
         else {
             return {
                 ok: true,
                 msg: "jwt verified.",
                 decoded,
-                status: 200
-            }
+                status: 200,
+            };
         }
     });
 
    
     
-}
+};
 
 export default verifyJwt;

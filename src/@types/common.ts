@@ -3,5 +3,5 @@ export interface CoreOutput {
     msg?: string,
     error?: string,
     status: number,
-};
+}
 

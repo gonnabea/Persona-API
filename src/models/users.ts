@@ -43,8 +43,8 @@ const userSchema = new Schema({
     email: String,
     password: String,
     createdAt: Date,
-    updatedAt: Date
-})
+    updatedAt: Date,
+});
 
 const User = mongoose.model('User', userSchema);
 
