@@ -3,6 +3,7 @@ import { checkEmailValid, checkPassword } from "../utils";
 import { CreateAccount, Login } from "../@types/auth";
 import User from "../models/users";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 
 export const createAccount = async (req: Request, res: Response): Promise<CreateAccount> => {
@@ -14,10 +15,17 @@ export const createAccount = async (req: Request, res: Response): Promise<Create
         const emailValid : boolean = checkEmailValid(email);
 
         if(checkPW && emailValid) {
+            
+            const saltRounds = 10;
+
+            // 비밀번호 해시 & 솔트 처리
+            const salt = await bcrypt.genSalt(saltRounds);
+            const hashed = await bcrypt.hash(password, salt);
+
             // 계정 생성 성공
             const newUser = await User.create({
                 email,
-                password,
+                password: hashed,
             });
 
             return {

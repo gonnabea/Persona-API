@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { VerifyJwt } from "../@types/auth";
 
 
-const verifyJwt = (token: string) => {
+const verifyJwt = (token: string): void => {
     return jwt.verify(token, process.env.SECRET_KEY, function(err, decoded) {
         if (err) {
             return {
