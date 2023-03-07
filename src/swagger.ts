@@ -27,5 +27,5 @@ export const swaggerOptions = {
         },
       ],
     },
-    apis: ["./models/users.ts"],
+    apis: ["./models/users.js"],
   };

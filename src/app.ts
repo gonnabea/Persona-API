@@ -2,8 +2,10 @@ import express from "express";
 import logger from "morgan";
 import * as path from "path";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 import { errorHandler, errorNotFoundHandler } from "./middlewares/errorHandler";
+
 
 // Routes
 import { index } from "./routes/index";
@@ -14,12 +16,18 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { swaggerOptions } from "./swagger";
 
+dotenv.config();
+
 // Create Express server
 export const app = express();
 
-const { MONGO_URL } = process.env;
 
-export const mongooseConnection = mongoose.connect(MONGO_URL);
+const { MONGO_DEV_URL } = process.env;
+
+
+export const mongooseConnection = mongoose.connect(MONGO_DEV_URL);
+
+
 
 // Express configuration
 app.set("port", process.env.PORT || 4000);
