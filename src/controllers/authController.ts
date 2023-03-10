@@ -9,7 +9,7 @@ import bcrypt from "bcrypt";
 export const createAccount = async (
     req: Request,
     res: Response,
-): Promise<void> => {
+) => {
     try {
         const { email, password, password2 } = req.body;
 
@@ -30,33 +30,33 @@ export const createAccount = async (
                 password: hashed,
             });
 
-            res.send({
+            return {
                 ok: true,
                 msg: "new account created.",
                 status: 200,
                 data: newUser,
-            });
+            };
         } else if (!emailValid) {
             // 유효하지 않은 이메일 형식일 경우
-            res.send({
+            return {
                 ok: false,
                 error: "Email is not valid.",
                 status: 400,
-            });
+            };
         } else if (!checkPW) {
             // 비밀번호가 다를 경우
-            res.send({
+            return {
                 ok: false,
                 error: "Password not matching.",
                 status: 400,
-            });
+            };
         } else {
             // 알 수 없는 오류일 경우
-            res.send({
+            return {
                 ok: false,
                 error: "Can't create account.",
                 status: 400,
-            });
+            };
         }
     } catch (err) {
         console.log("createAccount:: ", err);
