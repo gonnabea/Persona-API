@@ -93,7 +93,7 @@ export const login = async (req: Request, res: Response) => {
             
         }
 
-        if (!pwValid) {
+        if (!pwVerified) {
             return res.send({
                 ok: false,
                 status: 400,
