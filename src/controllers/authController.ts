@@ -80,34 +80,38 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             });
         }
 
-        // const pwValid = checkPassword(password);
+        const pwVerified = await bcrypt.compare(password, user.password);
 
-        // if (!pwValid) {
-        //     res.send({
-        //         ok: false,
-        //         status: 400,
-        //         error: "1. password should include 1 character and number \n 2. password should at least 8 characters",
-        //     });
-        // }
+        const pwValid = checkPassword(password);
 
-        const token = jwt.sign(
-            {
-                data: {
-                    email,
+        if (!pwValid) {
+            res.send({
+                ok: false,
+                status: 400,
+                error: "1. password should include 1 character and number \n 2. password should at least 8 characters",
+            });
+        }
+
+        if (pwVerified && pwValid) {
+            const token = jwt.sign(
+                {
+                    data: {
+                        email,
+                    },
                 },
-            },
-            process.env.SECRET_KEY,
-            { expiresIn: "2h", algorithm: "HS256" },
-        ); // 2시간 뒤 토큰 만료
-
-        console.log(token);
-
-        res.send({
-            ok: true,
-            status: 200,
-            msg: "login success.",
-            token,
-        });
+                process.env.SECRET_KEY,
+                { expiresIn: "2h", algorithm: "HS256" },
+            ); // 2시간 뒤 토큰 만료
+    
+            console.log(token);
+    
+            res.send({
+                ok: true,
+                status: 200,
+                msg: "login success.",
+                token,
+            });
+        }
     } catch (err) {
         console.log("login:: ", err);
     }
