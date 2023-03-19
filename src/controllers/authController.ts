@@ -82,16 +82,16 @@ export const login = async (req: Request, res: Response) => {
 
         const pwVerified = await bcrypt.compare(password, user.password);
 
-        const pwValid = checkPassword(password);
+        // const pwValid = checkPassword(password);
 
-        if (!pwValid) {
-            return res.send({
-                ok: false,
-                status: 400,
-                error: "1. password should include 1 character and number \n 2. password should at least 8 characters",
-            });
+        // if (!pwValid) {
+        //     return res.send({
+        //         ok: false,
+        //         status: 400,
+        //         error: "1. password should include 1 character and number \n 2. password should at least 8 characters",
+        //     });
             
-        }
+        // }
 
         if (!pwVerified) {
             return res.send({
@@ -101,7 +101,7 @@ export const login = async (req: Request, res: Response) => {
             });
         }
 
-        if (pwVerified && pwValid) {
+        if (pwVerified) {
             const token = jwt.sign(
                 {
                     data: {
