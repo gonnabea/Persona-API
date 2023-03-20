@@ -34,7 +34,7 @@ export const createAccount = async (req: Request, res: Response) => {
                 username,
             });
 
-            res.send({
+            res.status(200).send({
                 ok: true,
                 msg: "new account created.",
                 status: 200,
@@ -42,21 +42,21 @@ export const createAccount = async (req: Request, res: Response) => {
             });
         } else if (!emailValid) {
             // 유효하지 않은 이메일 형식일 경우
-            res.send({
+            res.status(400).send({
                 ok: false,
                 error: "Email is not valid.",
                 status: 400,
             });
         } else if (!checkPW) {
             // 비밀번호가 다를 경우
-            res.send({
+            res.status(400).send({
                 ok: false,
                 error: "Password not matching.",
                 status: 400,
             });
         } else {
             // 알 수 없는 오류일 경우
-            res.send({
+            res.status(400).send({
                 ok: false,
                 error: "Can't create account.",
                 status: 400,
@@ -77,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
         });
 
         if (!user) {
-            return res.send({
+            return res.status(400).send({
                 ok: false,
                 status: 400,
                 error: "",
@@ -98,7 +98,7 @@ export const login = async (req: Request, res: Response) => {
         // }
 
         if (!pwVerified) {
-            return res.send({
+            return res.status(400).send({
                 ok: false,
                 status: 400,
                 error: "wrong password",
@@ -119,7 +119,7 @@ export const login = async (req: Request, res: Response) => {
 
             console.log(token);
 
-            return res.send({
+            return res.status(200).send({
                 ok: true,
                 status: 200,
                 msg: "login success.",
