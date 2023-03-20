@@ -6,10 +6,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 // Promise<CreateAccount>
-export const createAccount = async (
-    req: Request,
-    res: Response,
-) => {
+export const createAccount = async (req: Request, res: Response) => {
     try {
         const { email, username, password, password2 } = req.body;
 
@@ -113,9 +110,9 @@ export const login = async (req: Request, res: Response) => {
                 process.env.SECRET_KEY,
                 { expiresIn: "2h", algorithm: "HS256" },
             ); // 2시간 뒤 토큰 만료
-    
+
             console.log(token);
-    
+
             return res.send({
                 ok: true,
                 status: 200,
