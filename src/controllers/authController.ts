@@ -14,7 +14,13 @@ export const createAccount = async (req: Request, res: Response) => {
 
         const emailValid: boolean = checkEmailValid(email);
 
-        if (checkPW && emailValid) {
+
+        const alreadyExist = await User.find().or([{ email }, { username }]);
+    
+
+        
+
+        if (checkPW && emailValid && !alreadyExist) {
             const saltRounds = 10;
 
             // 비밀번호 해시 & 솔트 처리
