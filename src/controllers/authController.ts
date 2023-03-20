@@ -11,7 +11,7 @@ export const createAccount = async (
     res: Response,
 ) => {
     try {
-        const { email, password, password2 } = req.body;
+        const { email, username, password, password2 } = req.body;
 
         const checkPW: boolean = password === password2;
 
@@ -28,6 +28,7 @@ export const createAccount = async (
             const newUser = await User.create({
                 email,
                 password: hashed,
+                username,
             });
 
             res.send({
@@ -66,7 +67,7 @@ export const createAccount = async (
 // Promise<Login>
 export const login = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body;
+        const { email, username, password } = req.body;
 
         const user = await User.findOne({
             email,
@@ -106,6 +107,7 @@ export const login = async (req: Request, res: Response) => {
                 {
                     data: {
                         email,
+                        username,
                     },
                 },
                 process.env.SECRET_KEY,

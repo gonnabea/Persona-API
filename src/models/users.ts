@@ -42,6 +42,7 @@ import { Schema } from "mongoose";
 const userSchema = new Schema({
     email: String,
     password: String,
+    username: String,
     createdAt: Date,
     updatedAt: Date,
 });
