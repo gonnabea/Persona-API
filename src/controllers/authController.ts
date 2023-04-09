@@ -24,7 +24,7 @@ export const createAccount = async (req: Request, res: Response) => {
 
         
 
-        if (checkPW && emailValid && !alreadyExist) {
+        if (checkPW && emailValid && alreadyExist.length === 0) {
             const saltRounds = 10;
 
             // 비밀번호 해시 & 솔트 처리
