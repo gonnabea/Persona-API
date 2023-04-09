@@ -16,6 +16,10 @@ export const createAccount = async (req: Request, res: Response) => {
 
 
         const alreadyExist = await User.find().or([{ email }, { username }]);
+
+        console.log(checkPW);
+        console.log(emailValid);
+        console.log(alreadyExist);
     
 
         
