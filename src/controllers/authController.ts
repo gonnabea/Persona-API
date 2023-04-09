@@ -80,7 +80,7 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).send({
                 ok: false,
                 status: 400,
-                error: "",
+                error: "cannot find an user.",
             });
         }
 
