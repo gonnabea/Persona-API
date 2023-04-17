@@ -127,6 +127,7 @@ export const login = async (req: Request, res: Response) => {
                 ok: true,
                 status: 200,
                 msg: "login success.",
+                data: user,
                 token,
             });
         }
