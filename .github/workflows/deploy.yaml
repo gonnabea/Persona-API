@@ -13,5 +13,4 @@ jobs:
       - name: Run Deploy Script file
         run: |
     ls -la
-        run: ./deploy.sh
-        shell: bash
+     
