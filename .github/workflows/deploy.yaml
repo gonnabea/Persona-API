@@ -11,5 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run Deploy Script file
-        run: ../deploy.sh
+        run: |
+    ls -la
+        run: ./deploy.sh
         shell: bash
