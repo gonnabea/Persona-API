@@ -10,11 +10,10 @@ if [ -d "persona" ]; then
         cd persona-api
         git pull origin main
         npm run build
-        npm start
-        # pm2 delete persona-api
-        # pm2 start "npm start" --name persona-api
-        # pm2 list
-        # pm2 logs
+        # npm start
+        pm2 delete persona-api
+        pm2 start "npm start" --name persona-api
+        pm2 list
     fi
 else
     echo "persona folder doesn't exist"
