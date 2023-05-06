@@ -2,7 +2,6 @@
 
 echo "Automate Deploy Persona API..."
 # cd ~/desktop/projects/oracle-cloud
-SSH_KEY_2022_08_17
 # ssh opc@146.56.145.39 -i ssh-key-2022-08-17.key << EOF
 ssh opc@146.56.145.39 -i $SSH_KEY_2022_08_17 << EOF
 if [ -d "persona" ]; then
