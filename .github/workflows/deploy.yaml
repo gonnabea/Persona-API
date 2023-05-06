@@ -12,7 +12,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run Deploy Script file
         working-directory: ./
-        run: |
-        chmod +x ./deploy.sh
+        run: ./deploy.sh
 
      
