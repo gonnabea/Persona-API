@@ -13,5 +13,7 @@ jobs:
       - name: Run Deploy Script file
         working-directory: ./
         run: ./deploy.sh
+        env:
+          SSH_KEY_2022_08_17: ${{ secrets.SSH_KEY_2022_08_17 }}
 
      
