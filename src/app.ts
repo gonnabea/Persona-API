@@ -11,10 +11,14 @@ import { errorHandler, errorNotFoundHandler } from "./middlewares/errorHandler";
 import { index } from "./routes/index";
 import { authRouter } from "./routes/authRouter";
 
-// Swagger
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
-import { swaggerOptions } from "./swagger";
+import swaggerUi from 'swagger-ui-express'
+
+import YAML from 'yamljs'
+
+const swaggerYaml = YAML.load(path.join(__dirname, '../build/swagger.yaml'))
+
+
+
 
 dotenv.config();
 
@@ -31,21 +35,19 @@ app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "pug");
 
 app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger("dev"));
 
 app.use(express.static(path.join(__dirname, "../public")));
+
+app.use('/api-yaml', swaggerUi.serve, swaggerUi.setup(swaggerYaml))
+
+
 app.use("/", index);
 app.use("/auth", authRouter);
 
-// swagger serve
-const specs = swaggerJsdoc(swaggerOptions);
-app.use(
-    "/api-docs",
-    swaggerUi.serve,
-    swaggerUi.setup(specs, { explorer: true }),
-);
 
 app.use(errorNotFoundHandler);
 app.use(errorHandler);
