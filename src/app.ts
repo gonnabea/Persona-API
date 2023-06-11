@@ -5,17 +5,19 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 
+
 import { errorHandler, errorNotFoundHandler } from "./middlewares/errorHandler";
 
 // Routes
 import { index } from "./routes/index";
 import { authRouter } from "./routes/authRouter";
 
-import swaggerUi from 'swagger-ui-express'
+import swaggerUi from 'swagger-ui-express';
+import swaggerDoucment from "./swagger/swagger.json";
 
-import YAML from 'yamljs'
+// import YAML from 'yamljs'
 
-const swaggerYaml = YAML.load(path.join(__dirname, '../build/swagger.yaml'))
+// const swaggerYaml = YAML.load(path.join(__dirname, '../build/swagger.yaml'))
 
 
 
@@ -42,7 +44,7 @@ app.use(logger("dev"));
 
 app.use(express.static(path.join(__dirname, "../public")));
 
-app.use('/api-yaml', swaggerUi.serve, swaggerUi.setup(swaggerYaml))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoucment));
 
 
 app.use("/", index);
