@@ -8,8 +8,8 @@
 - TypeScript
 
 ### Databases & ODM
-- [ ] MongoDB
-- [ ] Mongoose
+- [x] MongoDB
+- [x] Mongoose
 - [ ] Typegoose
 
 ### Framworks
@@ -21,5 +21,5 @@
 ### Process Management
 - [x] PM2
 
-### API DOc
+### API DOCs
 - [x] Swagger
