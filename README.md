@@ -16,7 +16,10 @@
 - [x] Express.js
 
 ### Web Server
-- [ ] NginX
+- [ ] nginX
 
 ### Process Management
-- [ ] PM2
+- [x] PM2
+
+### API DOc
+- [x] Swagger

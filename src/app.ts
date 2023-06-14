@@ -14,6 +14,7 @@ import { authRouter } from "./routes/authRouter";
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoucment from "./swagger/swagger.json";
+import { fileRouter } from "./routes/fileRouter";
 
 // import YAML from 'yamljs'
 
@@ -49,6 +50,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoucment));
 
 app.use("/", index);
 app.use("/auth", authRouter);
+app.use("/file", fileRouter);
 
 
 app.use(errorNotFoundHandler);

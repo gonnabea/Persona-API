@@ -14,7 +14,11 @@
     "tags": [
       {
         "name": "Auth",
-        "description": "API for Authentication in the system"
+        "description": "APIs for Authentication in the system"
+      },
+      {
+        "name": "File",
+        "description": "APIs for File Download"
       }
 
     ],
@@ -102,6 +106,45 @@
                   "description": "Sign Up Success",
                   "schema": {
                     "$ref": "#/definitions/SignUpBody"
+                  }
+                },
+                "401":{
+                  "description": "Failed (401)"
+                },
+                "404":{
+                  "description": "Failed (404)"
+                },
+                "500":{
+                  "description": "Failed (500)"
+                }
+              }
+        }
+      },
+      "/file/downloadCharacters": {
+        "get": {
+            "summary": "Download Character Model",
+            "tags": [
+                "File"
+            ],
+            "description": "Download Character by url with file name",
+            "parameters": [
+                {
+                  "in": "query",
+                  "name": "fileName",
+                  "type": "string",
+                  "description": "Input character model file name with extension (.glb ...) to download",
+                  "required": true,
+                  "example": "Louise.glb"
+                }
+            ],
+            "produces": [
+                "application/json"
+              ],
+              "responses": {
+                "200": {
+                  "description": "Download Success",
+                  "schema": {
+                   
                   }
                 },
                 "401":{
