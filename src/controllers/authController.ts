@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { checkEmailValid, checkPassword } from "../utils";
-import { CreateAccount, Login } from "../@types/auth";
+import { checkEmailValid } from "../utils";
 import User from "../models/users";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -14,15 +13,11 @@ export const createAccount = async (req: Request, res: Response) => {
 
         const emailValid: boolean = checkEmailValid(email);
 
-
         const alreadyExist = await User.find().or([{ email }, { username }]);
 
         console.log(checkPW);
         console.log(emailValid);
         console.log(alreadyExist);
-    
-
-        
 
         if (checkPW && emailValid && alreadyExist.length === 0) {
             const saltRounds = 10;
@@ -67,7 +62,11 @@ export const createAccount = async (req: Request, res: Response) => {
             });
         }
     } catch (err) {
-        console.log("createAccount:: ", err);
+        res.status(500).send({
+            ok: false,
+            status: 500,
+            error: err.toString(),
+        });
     }
 };
 
@@ -80,6 +79,9 @@ export const login = async (req: Request, res: Response) => {
             email,
         });
 
+        console.log(user);
+
+        // 사용자 없을 때 에러 반환
         if (!user) {
             return res.status(400).send({
                 ok: false,
@@ -88,19 +90,17 @@ export const login = async (req: Request, res: Response) => {
             });
         }
 
-        const pwVerified = await bcrypt.compare(password, user.password);
-
-        // const pwValid = checkPassword(password);
-
-        // if (!pwValid) {
-        //     return res.send({
+        // 이메일 인증 검증
+        // if (!user.active) {
+        //     return res.status(400).send({
         //         ok: false,
         //         status: 400,
-        //         error: "1. password should include 1 character and number \n 2. password should at least 8 characters",
+        //         error: "This Email not validated.",
         //     });
-            
         // }
 
+        // 비밀번호 검증
+        const pwVerified = await bcrypt.compare(password, user.password);
         if (!pwVerified) {
             return res.status(400).send({
                 ok: false,
@@ -132,6 +132,10 @@ export const login = async (req: Request, res: Response) => {
             });
         }
     } catch (err) {
-        console.log("login:: ", err);
+        res.status(500).send({
+            ok: false,
+            status: 500,
+            error: err.toString(),
+        });
     }
 };
