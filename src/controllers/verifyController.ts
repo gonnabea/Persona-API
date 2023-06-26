@@ -25,8 +25,8 @@ export const createEmailVerifyToken = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).send({
                 ok: false,
-                status: 400,
-                error: "Account is not found check your email.",
+                status: 404,
+                error: "Account is not found. check your email.",
             });
         }
 
