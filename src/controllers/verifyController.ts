@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/users";
 import { EmailToken } from "../models/verify";
+import { sendMail } from "../utils";
 
 // 이메일 인증 //
 // 이메일 인증토큰 생성
@@ -17,7 +18,9 @@ export const createEmailVerifyToken = async (req: Request, res: Response) => {
             email,
         });
         // 새로운 이메일 토큰
-        const newEmailToken = Math.floor(Math.random() * 999999);
+        const newEmailToken = Math.floor(
+            Math.random() * (999999 - 111111) + 111111,
+        );
 
         console.log(tokenInfo);
 
@@ -47,6 +50,18 @@ export const createEmailVerifyToken = async (req: Request, res: Response) => {
                 error: "Verify email is already sent. check your inbox or spam",
             });
         }
+
+        // 이메일 전송
+        await sendMail({
+            to: email,
+            subject: "[PERSONA] 이메일 인증 안내",
+            html: `
+                <h1>이메일 인증 안내</h1>
+                <p>아래 인증번호 6자리를 입력하여 인증을 완료해주세요.</p>
+                <h3>${newEmailToken}</h3>
+                <p>보안상의 이유로 인증번호는 이메일 발송 시점부터 24시간 동안 유지됩니다.</p>
+            `,
+        });
 
         // 이메일 토큰 생성
         await EmailToken.create({

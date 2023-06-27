@@ -1,3 +1,26 @@
+import nodeMailer from "nodemailer";
+
+type SendEmail = {
+    to: string;
+    subject: string;
+    html: string;
+};
+
+export const sendMail = async (
+    options: SendEmail,
+): Promise<nodeMailer.SentMessageInfo> => {
+    const transporter = nodeMailer.createTransport({
+        host: process.env.SMTP_HOST,
+        secure: true,
+        auth: {
+            user: process.env.SMTP_ID,
+            pass: process.env.SMTP_PASSWORD,
+        },
+    });
+
+    return await transporter.sendMail(options);
+};
+
 export function checkEmailValid(email: string): boolean {
     const emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     if (email !== "" && email.match(emailFormat)) {
