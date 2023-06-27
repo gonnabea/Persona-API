@@ -10,5 +10,5 @@ const emailTokenSchema = new Schema(
     { timestamps: true },
 );
 
-emailTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 });
+emailTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
 export const EmailToken = mongoose.model("EmailToken", emailTokenSchema);
