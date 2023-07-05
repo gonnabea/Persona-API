@@ -3,6 +3,7 @@ import { checkEmailValid } from "../utils";
 import User from "../models/users";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { ResetPasswordToken } from "../models/verify";
 
 // Promise<CreateAccount>
 export const createAccount = async (req: Request, res: Response) => {
@@ -133,6 +134,66 @@ export const login = async (req: Request, res: Response) => {
         }
     } catch (err) {
         res.status(500).send({
+            ok: false,
+            status: 500,
+            error: err.toString(),
+        });
+    }
+};
+
+// 비밀번호 초기화
+export const resetPassword = async (req: Request, res: Response) => {
+    try {
+        // 비밀번호, 비밀번호 확인, 토큰
+        const { password, password2, token } = req.body;
+        console.log(password, password2, token);
+        // 이미 존재하는 토큰 확인
+        const validTokenInfo = await ResetPasswordToken.findOne({
+            token: token,
+        });
+        // 사용자 정보를 토큰에서 검색
+        const validUserInfo = await User.findOne({
+            email: validTokenInfo?.email,
+        });
+        const saltRounds = 10;
+        // 비밀번호 해시 & 솔트 처리
+        const salt = await bcrypt.genSalt(saltRounds);
+        const hashedNewPassword = await bcrypt.hash(password, salt);
+
+        // 발급된 토큰이 있는지 확인
+        if (!validTokenInfo) {
+            return res.status(400).send({
+                ok: false,
+                status: 400,
+                error: "Invalid token",
+            });
+        }
+
+        // 비밀번호 1, 비밀번호 2 검증
+        if (password !== password2) {
+            return res.status(400).send({
+                ok: false,
+                status: 400,
+                error: "Password is incorrect please check your password",
+            });
+        }
+
+        // 비밀번호 변경
+        await validUserInfo.updateOne({
+            password: hashedNewPassword,
+        });
+
+        // 발급된 토큰 삭제
+        await validTokenInfo.remove();
+
+        // 초기화 성공
+        return res.status(200).send({
+            ok: true,
+            status: 200,
+            msg: "reset password is successfully done.",
+        });
+    } catch (err) {
+        return res.status(500).send({
             ok: false,
             status: 500,
             error: err.toString(),

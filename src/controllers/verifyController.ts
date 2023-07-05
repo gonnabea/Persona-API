@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/users";
-import { EmailToken } from "../models/verify";
+import { EmailToken, ResetPasswordToken } from "../models/verify";
 import { sendMail } from "../utils";
 
 // 이메일 인증 //
@@ -13,7 +13,7 @@ export const createEmailVerifyToken = async (req: Request, res: Response) => {
         const user = await User.findOne({
             email,
         });
-        // 중복방지용 이메일 토큰 정보 객체 요청
+        // 중복방지를 위한 기존에 생성된 이메일 인증 토큰 객체 요청
         const tokenInfo = await EmailToken.findOne({
             email,
         });
@@ -21,8 +21,6 @@ export const createEmailVerifyToken = async (req: Request, res: Response) => {
         const newEmailToken = Math.floor(
             Math.random() * (999999 - 111111) + 111111,
         );
-
-        console.log(tokenInfo);
 
         // 사용자가 가입을 하지 않아서 메일이 없는지 확인
         if (!user) {
@@ -121,6 +119,87 @@ export const verifyEmail = async (req: Request, res: Response) => {
             ok: true,
             status: 200,
             message: "Email verification is success.",
+        });
+    } catch (err) {
+        res.status(500).send({
+            ok: false,
+            status: 500,
+            error: err.toString(),
+        });
+    }
+};
+
+// 비밀번호 찾기 인증 //
+// 비밀번호 찾기 토큰 생성
+export const createResetPasswordToken = async (req: Request, res: Response) => {
+    try {
+        const s =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        const { email } = req.body;
+        // 사용자 정보 객체 요청
+        const user = await User.findOne({
+            email,
+        });
+        // 중복방지를 위한 기존에 생성된 비밀번호 찾기 인증 토큰 객체 요청
+        const tokenInfo = await ResetPasswordToken.findOne({
+            email,
+        });
+        // 새로운 비밀번호 찾기 인증 토큰
+        const newToken = Array(16)
+            .join()
+            .split(",")
+            .map(function () {
+                return s.charAt(Math.floor(Math.random() * s.length));
+            })
+            .join("");
+        // 사용자가 가입을 하지 않아서 메일이 없는지 확인
+        if (!user) {
+            return res.status(404).send({
+                ok: false,
+                status: 404,
+                error: "Account is not found. check your email.",
+            });
+        }
+
+        // 이미 전송된 비밀번호 찾기 인증용 토큰이 있으면 생략
+        if (tokenInfo) {
+            return res.status(400).send({
+                ok: false,
+                status: 400,
+                error: "Verify email is already sent. check your inbox or spam",
+            });
+        }
+
+        // 토큰 생성
+        await ResetPasswordToken.create({
+            email,
+            token: newToken,
+        });
+
+        // 이메일 전송
+        await sendMail({
+            to: email,
+            subject: "[PERSONA] 비밀번호 찾기 안내",
+            html: `
+                <h1>비밀번호 찾기 안내</h1>
+                <p>비밀번호 초기화가 요청되었습니다. 아래 버튼을 클릭하여 비밀번호를 변경하십시오.</p>
+                <a
+                    href="${process.env.BASE_URL}/resetPassword/set?token=${newToken}"
+                    alt="reset-pw"
+                >
+                    <button>비밀번호 초기화</button>
+                </a>
+                <p>버튼이 작동하지 않는다면 하단 URL을 눌러주세요.</p>
+                <p>${process.env.BASE_URL}/resetPassword/set?token=${newToken}</p>
+                <p>보안상의 이유로 비밀번호 변경은 이메일 발송 시점부터 24시간 동안 가능합니다.</p>
+            `,
+        });
+
+        return res.status(200).send({
+            ok: true,
+            status: 200,
+            message: "Email is successfully sent. check your inbox.",
         });
     } catch (err) {
         res.status(500).send({
