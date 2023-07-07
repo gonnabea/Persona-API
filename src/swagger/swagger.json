@@ -108,6 +108,35 @@
                 }
             }
         },
+        "/auth/reset-password": {
+            "post": {
+                "summary": "Reset password",
+                "tags": ["Auth"],
+                "description": "Reset password",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "body",
+                        "description": "Verification tokens for reset password",
+                        "schema": {
+                            "$ref": "#/definitions/resetPasswordBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reset password is successfully."
+                    },
+                    "400": {
+                        "description": "Invalid token, New password is incorrect."
+                    },
+                    "500": {
+                        "description": "Server Error"
+                    }
+                }
+            }
+        },
         "/file/downloadCharacters": {
             "get": {
                 "summary": "Download Character Model",
@@ -202,6 +231,38 @@
                     }
                 }
             }
+        },
+        "/verify/reset-password": {
+            "post": {
+                "summary": "Generate tokens for Reset password",
+                "tags": ["Verify"],
+                "description": "Generate tokens for Reset password",
+                "produces": ["application/json"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "email",
+                        "type": "string",
+                        "description": "Email for generate tokens for reset password",
+                        "required": true,
+                        "example": { "email": "email@email.com" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reset password is requested."
+                    },
+                    "400": {
+                        "description": "Token is already exists."
+                    },
+                    "404": {
+                        "description": "Account is not found"
+                    },
+                    "500": {
+                        "description": "Server Error"
+                    }
+                }
+            }
         }
     },
 
@@ -222,6 +283,19 @@
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "password2": {
+                    "type": "string"
+                }
+            }
+        },
+        "resetPasswordBody": {
+            "properties": {
+                "token": {
                     "type": "string"
                 },
                 "password": {
