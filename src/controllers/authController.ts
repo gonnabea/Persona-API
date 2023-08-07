@@ -54,7 +54,9 @@ export const createAccount = async (req: Request, res: Response) => {
                 error: "Password not matching.",
                 status: 400,
             });
-        } else {
+        } 
+        
+        else {
             // 알 수 없는 오류일 경우
             res.status(400).send({
                 ok: false,
